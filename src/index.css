@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Poppins", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+
+/* ant design menu option */
+.ant-menu-light .ant-menu-item {
+  color: #ffffff !important;
+}
+.ant-menu-item:hover {
+  background-color: White !important;
+  color: black !important;
+}
+
+.ant-menu-item-selected {
+  background-color: White !important;
+  color: black !important;
+}
+
+.ant-menu .ant-menu-item .ant-menu-item-icon + span {
+  transition: none !important;
+}
+
+/* pagination style */
+:where(.css-dev-only-do-not-override-11lehqq).ant-pagination .ant-pagination-item a {
+  color: red !important;
+}
+.ant-pagination-item-ellipsis{
+  color: #ffffff !important;
+}
+
+.ant-pagination-item-link > .anticon {
+  color: #ffffff !important;
+}
+
+
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #dfdfdf00;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #000000;
+}
+
+
+/* Add this to your global CSS or in your component's CSS file */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+
+
+
+
+
+.jodit-workplace {
+  height: 550px !important;
+}
+ 
+.jodit-wysiwyg ul {
+  list-style-type: disc;
+  padding-left: 40px;
+}
+ 
+.jodit-wysiwyg ol {
+  list-style-type: decimal;
+  padding-left: 40px;
+}
+ 
