@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button, ConfigProvider, Select, Modal, Pagination } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useOrdersQuery, useOrderStatusMutation } from "../../redux/apiSlices/orderSlice";
 import toast from "react-hot-toast";
 import { t } from "i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import OrderDetailsModal from "../../components/ui/Orders/OrderDetails";
 import { MdLocalShipping } from "react-icons/md";
 import { useCreateShippingMutation } from "../../redux/apiSlices/shippingSlice";
-
+import RetryOrderModal from "../../components/ui/Orders/RetryOrder";
 const options = [
   {
     value: 'received',
@@ -36,22 +36,27 @@ const options = [
 
 
 const RunningOrders = () => {
-  const [pageSize, setPageSize] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1); // To manage current page state
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const currentPage = +searchParams.get('currentPage') || 1;
+  const pageSize = +searchParams.get('pageSize') || 10;
+  const trackUrl = +searchParams.get('trackUrl') || "";
+  console.log(trackUrl);
+  // console.log("current page : ", currentPage, "page size : ", pageSize);
 
 
   const [orderStatus] = useOrderStatusMutation();
-  const [createShipping] = useCreateShippingMutation();
 
-  const { data: allOrders, isLoading, refetch } = useOrdersQuery({ page: currentPage, limit: pageSize });
+  const { data: allOrders, isLoading, refetch } = useOrdersQuery({ page: currentPage, limit: pageSize, trackUrl: trackUrl });
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
+  const handleRefetch = () => {
+    refetch();
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage, pageSize, trackUrl]);
 
   const orderData = allOrders?.data?.map((order) => {
     return {
@@ -61,8 +66,8 @@ const RunningOrders = () => {
   });
 
   const handlePageChange = (page, pageSize) => {
-    setCurrentPage(page); // Update current page state
-    setPageSize(pageSize); // Update page size state
+    // console.log(page, pageSize);
+    navigate(`?currentPage=${page}&pageSize=${pageSize}`);
   };
 
 
@@ -83,23 +88,9 @@ const RunningOrders = () => {
     }
   }
 
-  const handleShipping = (id) => {
-    Modal.confirm({
-      title: "Are you sure you want to add this product in shopping cart?",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk: async () => {
-        try {
-          await createShipping(id);
-          refetch(); 
-          toast.success("Product add in shipping cart successfully!");
-          // You might want to remove the banner from the local state here as well
-        } catch (error) {
-          toast.error("Failed to add product in shipping cart.");
-        }
-      },
-    });
+  const handleUncompletedOrders = () => {
+    // console.log("handleUncompletedOrders");
+    navigate(`?currentPage=${currentPage}&pageSize=${pageSize}&trackUrl="false"`);
   };
 
   const refactorFileUrl = (url) => {
@@ -155,38 +146,39 @@ const RunningOrders = () => {
     {
       title: "Order Status",
       dataIndex: "status",
-      key: "status",
-      render: (status) => (
+      key: "trackUrl",
+      render: (trackUrl) => (
         <span className="text-yellow-500 font-semibold">
-          {status}
+          {trackUrl ? "Completed" : "Pending"}
         </span>
       ),
     },
-    {
-      title: "Change Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status, record) => (
-        <div className="">
-          <ConfigProvider theme={theme}>
-            <Select
-              onChange={(value) => handleOrderStatus(value, record._id)}
-              placeholder={status}
-              style={{
-                width: 120,
-              }}
-              options={options}
-            />
-          </ConfigProvider>
-        </div>
-      ),
-    },
+    // {
+    //   title: "Change Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (status, record) => (
+    //     <div className="">
+    //       <ConfigProvider theme={theme}>
+    //         <Select
+    //           onChange={(value) => handleOrderStatus(value, record._id)}
+    //           placeholder={status}
+    //           style={{
+    //             width: 120,
+    //           }}
+    //           options={options}
+    //         />
+    //       </ConfigProvider>
+    //     </div>
+    //   ),
+    // },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
         <div className="flex gap-2">
           <OrderDetailsModal orderData={record} />
+          <RetryOrderModal order={record} handleRefetch={handleRefetch} />
           {/* <Button disabled={record.status !== "received"} onClick={() => handleShipping(record._id)} type="outline" className={`border h-9 w-12 ${record.status !== "received" ? "bg-gray-500" : "bg-gray-700 hover:bg-gray-800"} `}>
             <MdLocalShipping className="w-8 h-8 text-white" />
           </Button> */}
@@ -195,13 +187,6 @@ const RunningOrders = () => {
     },
   ];
 
-
-
-  const handleDelete = (key) => {
-
-    console.log(`Deleting order with key: ${key}`);
-    // Add logic to delete the order here
-  };
 
   const theme = {
     "components": {
@@ -234,9 +219,21 @@ const RunningOrders = () => {
     // "algorithm": "dark"
   }
 
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold text-gray-50 my-5">Orders Management</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-semibold text-gray-50 my-5">Orders Management</h1>
+        <button onClick={handleUncompletedOrders} className="text-white border border-white rounded-md px-3 py-1">Check uncompleted orders</button>
+      </div>
       <div className="bg-black p-4">
         <ConfigProvider theme={theme}>
           <Table columns={columns} dataSource={orderData} rowKey="key" pagination={false} />
@@ -244,7 +241,7 @@ const RunningOrders = () => {
       </div>
       <div className="flex items-center justify-end py-4">
         {/* <Pagination current={data?.data?.meta?.page} onChange={(page, pageSize) => console.log(page, pageSize)} total={100} /> */}
-        <Pagination current={allOrders?.meta?.page} onChange={(page, pageSize) => handlePageChange(page, pageSize)} total={allOrders?.meta?.total} />
+        <Pagination current={allOrders?.meta?.page} onChange={handlePageChange} total={allOrders?.meta?.total} />
       </div>
     </div>
   );

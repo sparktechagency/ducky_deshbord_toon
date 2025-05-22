@@ -56,7 +56,7 @@ const Sidebar = () => {
     {
       key: "/orders",
       icon: <FaBorderStyle size={24} />,
-      label: <Link to="/orders">Orders</Link>,
+      label: <Link to="/orders?currentPage=2&pageSize=10">Orders</Link>,
     },
     // {
     //   key: "/pickup",

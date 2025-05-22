@@ -1,5 +1,4 @@
 import { FaUsers } from "react-icons/fa6";
-import salongoLogo from "../../../assets/salon-go-logo.png";
 import { useUsersQuery } from "../../../redux/apiSlices/userSlice";
 import { useAllProductQuery } from "../../../redux/apiSlices/productSlice";
 import { useOrdersQuery } from "../../../redux/apiSlices/orderSlice";

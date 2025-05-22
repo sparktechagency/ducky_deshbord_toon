@@ -10,9 +10,6 @@ import {
 } from "../../../redux/apiSlices/authSlice";
 import logo from "../../../assets/randomProfile2.jpg";
 import toast from "react-hot-toast";
-import rentMeLogo from "../../../assets/navLogo.png";
-
-const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const PersonalInfo = () => {
   const [imgURL, setImgURL] = useState();

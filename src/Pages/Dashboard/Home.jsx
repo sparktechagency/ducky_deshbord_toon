@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import rentMeLogo from "../../assets/navLogo.png";
 import GeneralStateSection from "../../components/ui/Home/GeneralStateSection";
 import RevenueDay from "../../components/Shared/RevenueDay";
 import RevenueYear from "../../components/Shared/RevenueYear";
