@@ -4,15 +4,28 @@ import { Form, Input, Button } from "antd";
 import { useUpdateMadeMutation } from '../../../redux/apiSlices/madeSlice';
 import toast from 'react-hot-toast';
 import { FaEdit } from "react-icons/fa";
-import { useRetryOrderMutation } from '../../../redux/apiSlices/orderSlice';
+import { useRequestShippingMutation, useRetryOrderMutation } from '../../../redux/apiSlices/orderSlice';
+import { RiLoopLeftFill } from "react-icons/ri";
 
 export default function RetryOrderModal({ order, handleRefetch }) {
   const [isOpen, setIsOpen] = useState(false);
   const [form] = Form.useForm();
+  const [displayOption, setDisplayOption] = useState('orderComponent');
 
   // console.log(order);
 
   const [retryOrder, { isLoading }] = useRetryOrderMutation();
+  const [requestShipping] = useRequestShippingMutation();
+
+  const handleShippingRequest = async () => {
+    const response = await requestShipping(order._id);
+    // console.log(response)
+    if (response?.data) {
+      toast.success("Shipping request sent successfully!");
+      handleRefetch();
+      setIsOpen(false);
+    }
+  }
 
   const onFinish = async (values) => {
     // console.log(order);
@@ -30,14 +43,15 @@ export default function RetryOrderModal({ order, handleRefetch }) {
       formData.append("country", values.country);
       formData.append("business", values.business);
       formData.append("address2", values.address2);
-            
+
 
       const response = await retryOrder({ id: order._id, data: formData });
 
       if (response.data) {
         toast.success("Order generated successfully!");
         handleRefetch();
-        setIsOpen(false);
+        setDisplayOption('shipmentComponent');
+        // setIsOpen(false);
       } else {
         toast.error("Failed to generate order!");
       }
@@ -50,15 +64,15 @@ export default function RetryOrderModal({ order, handleRefetch }) {
   return (
     <div className="flex flex-col items-center">
       <Button onClick={() => setIsOpen(true)} type="outline" className="border border-white h-9 w-12">
-        <FaEdit className="w-8 h-8 text-white" />
+        <RiLoopLeftFill className="w-8 h-8 text-white" />
       </Button>
 
       {isOpen && (
-        <div onClick={() => setIsOpen(false)} className="fixed inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center z-50">
-          <div onClick={(e) => e.stopPropagation()} className="relative bg-gray-100 rounded-lg shadow-xl w-[600px] my-8">
+        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-gray-100 rounded-lg shadow-xl w-[600px] my-8">
             {/* Modal Header */}
             <div className="sticky top-0 rounded-t-lg bg-gray-700 text-white px-6 h-16 flex justify-between items-center">
-              <h3 className="text-xl font-semibold">Retry Order</h3>
+              <h3 className="text-xl font-semibold">Update Status</h3>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-white hover:text-gray-200 transition-colors"
@@ -66,7 +80,7 @@ export default function RetryOrderModal({ order, handleRefetch }) {
                 <X size={24} />
               </button>
             </div>
-            <div className='w-full h-[calc(96vh-68px)] overflow-y-scroll scrollbar-hidden'>
+            {displayOption === 'orderComponent' && <div className='w-full h-[calc(96vh-68px)] overflow-y-scroll scrollbar-hidden'>
               <div className="w-full gap-6 p-6">
                 <div className='w-full'>
                   <Form
@@ -178,13 +192,18 @@ export default function RetryOrderModal({ order, handleRefetch }) {
 
                     <div className="flex items-center justify-end gap-4">
                       <Button type="outline" className="border border-gray-500" htmlType="submit">
-                        Retry Order
+                        Update
                       </Button>
                     </div>
                   </Form>
                 </div>
               </div>
-            </div>
+            </div>} 
+            {displayOption === "shipmentComponent" && <div className='py-10 flex items-center justify-center'>
+              <Button onClick={handleShippingRequest} type="outline" className="border border-gray-500">
+                Shipment
+              </Button>
+            </div>}
           </div>
         </div>
       )}

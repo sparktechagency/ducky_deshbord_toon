@@ -9,6 +9,7 @@ import OrderDetailsModal from "../../components/ui/Orders/OrderDetails";
 import { MdLocalShipping } from "react-icons/md";
 import { useCreateShippingMutation } from "../../redux/apiSlices/shippingSlice";
 import RetryOrderModal from "../../components/ui/Orders/RetryOrder";
+import { RiLoopLeftFill } from "react-icons/ri";
 const options = [
   {
     value: 'received',
@@ -41,7 +42,7 @@ const RunningOrders = () => {
 
   const currentPage = +searchParams.get('currentPage') || 1;
   const pageSize = +searchParams.get('pageSize') || 10;
-  const trackUrl = +searchParams.get('trackUrl') || "";
+  const trackUrl = searchParams.get('trackUrl') || "";
   console.log(trackUrl);
   // console.log("current page : ", currentPage, "page size : ", pageSize);
 
@@ -71,26 +72,26 @@ const RunningOrders = () => {
   };
 
 
-  const handleOrderStatus = async (status, id) => {
-    // console.log(`Selected order status: ${status}, Order ID: ${id}`);
-    // Add logic to update the order status here
-    try {
-      const response = await orderStatus({ id, status });
-      // console.log("response : ", response);
-      if (response?.data) {
-        refetch();
-        toast.success("Order status updated successfully!");
-      } else {
-        toast.error("Failed to update order status!");
-      }
-    } catch (err) {
-      toast.error("Order status updated failed!");
-    }
-  }
+  // const handleOrderStatus = async (status, id) => {
+  //   // console.log(`Selected order status: ${status}, Order ID: ${id}`);
+  //   // Add logic to update the order status here
+  //   try {
+  //     const response = await orderStatus({ id, status });
+  //     // console.log("response : ", response);
+  //     if (response?.data) {
+  //       refetch();
+  //       toast.success("Order status updated successfully!");
+  //     } else {
+  //       toast.error("Failed to update order status!");
+  //     }
+  //   } catch (err) {
+  //     toast.error("Order status updated failed!");
+  //   }
+  // }
 
   const handleUncompletedOrders = () => {
     // console.log("handleUncompletedOrders");
-    navigate(`?currentPage=${currentPage}&pageSize=${pageSize}&trackUrl="false"`);
+    navigate(`?currentPage=1&pageSize=10&trackUrl=false`);
   };
 
   const refactorFileUrl = (url) => {
@@ -178,7 +179,7 @@ const RunningOrders = () => {
       render: (_, record) => (
         <div className="flex gap-2">
           <OrderDetailsModal orderData={record} />
-          <RetryOrderModal order={record} handleRefetch={handleRefetch} />
+          {record?.trackUrl === "false" &&  <RetryOrderModal order={record} handleRefetch={handleRefetch} />}
           {/* <Button disabled={record.status !== "received"} onClick={() => handleShipping(record._id)} type="outline" className={`border h-9 w-12 ${record.status !== "received" ? "bg-gray-500" : "bg-gray-700 hover:bg-gray-800"} `}>
             <MdLocalShipping className="w-8 h-8 text-white" />
           </Button> */}

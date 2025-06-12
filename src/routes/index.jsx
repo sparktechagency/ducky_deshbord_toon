@@ -93,7 +93,7 @@ const router = createBrowserRouter([
         element: <Shipment />,
       },
       {
-        path: "/privacy-policy",
+        path: "/our-vision",
         element: <PrivacyPolicy />,
       },
       {

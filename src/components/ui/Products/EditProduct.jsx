@@ -10,6 +10,7 @@ const EditProduct = () => {
   const inputRef = useRef(null);
   const [imgURL, setImgURL] = useState(null);
   const [file, setFile] = useState(null);
+  const [lastImg, setLastImg] = useState(null);
   const [files, setFiles] = useState(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -57,6 +58,13 @@ const EditProduct = () => {
     }
   };
 
+  const handleLastImage = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setLastImg(selectedFile);
+    }
+  };
+
   const handleImages = (e) => {
     const selectedFile = Array.from(e.target.files).map((file) => file);
     // console.log(selectedFile, "selectedFile");
@@ -86,6 +94,10 @@ const EditProduct = () => {
       // Add cover image to FormData
       if (file) {
         formData.append("coverImage", file);
+      }
+
+      if (lastImg) {
+        formData.append("lastImage", lastImg);
       }
 
       // Include the image file as 'images'
@@ -188,7 +200,7 @@ const EditProduct = () => {
 
         {/* ------------ Product Images ------------ */}
         <div className="flex items-center mb-6 gap-2">
-          <label htmlFor="multipleImg">Images: </label>
+          <label htmlFor="">Images: </label>
           <input onChange={handleImages} type="file" multiple id="multipleImg" />
           <div className="flex flex-wrap my-2 gap-1">
             {
@@ -203,6 +215,24 @@ const EditProduct = () => {
                 ))
               ) : (
                 <p>No images selected</p>
+              )
+            }
+          </div>
+        </div>
+
+        {/* ------------ Product Last Images ------------ */}
+        <div className="flex items-center mb-6 gap-2">
+          <label htmlFor="lastImg">Last Image: </label>
+          <input onChange={handleLastImage} type="file"  id="lastImg" />
+          <div className="flex flex-wrap my-2 gap-1">
+            {
+              product?.data?.lastImage && (
+                <img
+                    key={index}
+                    src={`${import.meta.env.VITE_BASE_URL}/${product?.data?.lastImage}`}
+                    alt={`Product Image ${index + 1}`}
+                    className="w-16 h-16 object-cover rounded-md"
+                  />
               )
             }
           </div>

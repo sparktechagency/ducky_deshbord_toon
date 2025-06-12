@@ -11,6 +11,7 @@ const AddProduct = () => {
   const [imgURL, setImgURL] = useState();
   const [file, setFile] = useState(null);
   const [files, setFiles] = useState(null);
+  const [lastImg, setLastImg] = useState(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -35,9 +36,16 @@ const AddProduct = () => {
   };
   const handleImages = (e) => {
     const selectedFile = Array.from(e.target.files).map((file) => file);
-    console.log(selectedFile, "selectedFile");
+    // console.log(selectedFile, "selectedFile");
     if (selectedFile.length > 0) {
       setFiles(selectedFile);
+    }
+  };
+
+  const handleLastImage = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setLastImg(selectedFile);
     }
   };
 
@@ -76,6 +84,13 @@ const AddProduct = () => {
         formData.append("coverImage", file);
       } else {
         message.error("Upload product cover image.");
+        return;
+      }
+      // Include the image file as 'image'
+      if (lastImg) {
+        formData.append("lastImage", lastImg);
+      } else {
+        message.error("Upload product last image.");
         return;
       }
 
@@ -236,6 +251,20 @@ const AddProduct = () => {
             type="file"
             multiple
             id="multipleImg"
+          />
+        </div>
+
+        {/* ------------ Last Product Image ------------ */}
+        <div className="flex items-center mb-6 gap-2">
+          <label
+            htmlFor="lastImg"
+            className=""
+          >Last Image: </label>
+          <input
+            onChange={handleLastImage}
+            accept="image/*"
+            type="file"
+            id="lastImg"
           />
         </div>
 

@@ -23,6 +23,15 @@ const orderSlice = api.injectEndpoints({
       },
       invalidatesTags: ["Orders"],
     }),
+    requestShipping: builder.mutation({
+      query: (id) => {
+        return {
+          method: "POST",
+          url: `/shipping/create-shipping-request/${id}`,
+        };
+      },
+      invalidatesTags: ["Orders"],
+    }),
 
     orderStatus: builder.mutation({
       query: ({id, status}) => {
@@ -45,4 +54,4 @@ const orderSlice = api.injectEndpoints({
   }),
 });
 
-export const { useOrdersQuery, useOrderProgressQuery, useRetryOrderMutation, useOrderStatusMutation } = orderSlice;
+export const { useOrdersQuery, useOrderProgressQuery, useRetryOrderMutation, useOrderStatusMutation, useRequestShippingMutation } = orderSlice;

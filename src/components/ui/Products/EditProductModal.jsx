@@ -16,6 +16,7 @@ export default function EditProductModal({ product }) {
   const [imgURL, setImgURL] = useState(null);
   const [file, setFile] = useState(null);
   const [files, setFiles] = useState(null);
+  const [lastImg, setLastImg] = useState(null);
   const [form] = Form.useForm();
   // const { id } = useParams(); // Get the product ID from URL
 
@@ -62,6 +63,13 @@ export default function EditProductModal({ product }) {
     }
   };
 
+  const handleLastImage = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setLastImg(selectedFile);
+    }
+  };
+
 
   const handleImages = (e) => {
     const selectedFile = Array.from(e.target.files).map((file) => file);
@@ -92,6 +100,10 @@ export default function EditProductModal({ product }) {
       // Add cover image to FormData
       if (file) {
         formData.append("coverImage", file);
+      }
+      
+      if (lastImg) {
+        formData.append("lastImage", lastImg);
       }
 
       // Include the image file as 'images'
@@ -217,6 +229,23 @@ export default function EditProductModal({ product }) {
                         ))
                       ) : (
                         <p>No images selected</p>
+                      )
+                    }
+                  </div>
+                </div>
+
+                {/* ------------ Product Last Images ------------ */}
+                <div className="flex items-center mb-6 gap-2">
+                  <label htmlFor="lastImg">Last Image: </label>
+                  <input onChange={handleLastImage} type="file" id="lastImg" />
+                  <div className="flex flex-wrap my-2 gap-1">
+                    {
+                      product?.lastImage && (
+                        <img
+                          src={`${import.meta.env.VITE_BASE_URL}/${product?.lastImage}`}
+                          alt={`Product Last Image`}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
                       )
                     }
                   </div>
