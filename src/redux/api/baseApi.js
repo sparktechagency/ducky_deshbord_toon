@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 // Enhanced base query to handle token refresh
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({
-    baseUrl: "http://52.28.108.62:8078/api/v1",
+    baseUrl: "http://52.28.108.62/api/v1",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("toon_authToken") || sessionStorage.getItem("toon_authToken");
       if (token) {
