@@ -97,12 +97,13 @@ const AddProduct = () => {
       const response = await addProduct(formData);
 
       if (response.data) {
-        toast.success(response?.data?.message);
+        toast.success(response?.data?.message || "Product added successfully!");
         navigate("/products");
       } else {
-        toast.error(response?.data?.message);
+        toast.error(response?.data?.message || "Failed to add product.");
       }
     } catch (error) {
+      toast.error(error?.message || "Failed to add product.");
       console.error("Error submitting form:", error);
     }
   };
@@ -251,6 +252,9 @@ const AddProduct = () => {
             type="file"
             multiple
             id="multipleImg"
+            required
+            minLength={1}
+            maxLength={3}
           />
         </div>
 
@@ -265,6 +269,7 @@ const AddProduct = () => {
             accept="image/*"
             type="file"
             id="lastImg"
+            required
           />
         </div>
 
@@ -276,6 +281,7 @@ const AddProduct = () => {
             accept="image/*"
             id="img"
             style={{ display: "none" }}
+            required
           />
           <label
             htmlFor="img"
