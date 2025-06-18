@@ -5,7 +5,8 @@ import Cookies from "js-cookie";
 // Enhanced base query to handle token refresh
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({
-    baseUrl: "http://10.0.70.163:8078/api/v1",
+    baseUrl: `${import.meta.env.VITE_BASE_URL}api/v1`,
+    // baseUrl: "http://10.0.70.163:8078/api/v1",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("toon_authToken") || sessionStorage.getItem("toon_authToken");
       if (token) {
@@ -82,5 +83,5 @@ export const api = createApi({
 });
 
 // Export the image URL as a constant
-export const imageUrl = "http://10.0.70.163:8078/";
-// export const imageUrl = "http://10.0.70.163:8078";
+export const imageUrl = `${import.meta.env.VITE_BASE_URL}`;
+// export const imageUrl = "http://10.0.70.163:8078/";
