@@ -1,8 +1,10 @@
+import { MdOutlineEuroSymbol } from "react-icons/md";
 import { FaUsers } from "react-icons/fa6";
 import { useUsersQuery } from "../../../redux/apiSlices/userSlice";
 import { useAllProductQuery } from "../../../redux/apiSlices/productSlice";
 import { useOrdersQuery } from "../../../redux/apiSlices/orderSlice";
 import { useEarningsQuery } from "../../../redux/apiSlices/earningSlice";
+
 
 const GeneralStateSection = () => {
   const { data: users } = useUsersQuery({searchTerm: "", page: 1, limit: 10});
@@ -67,8 +69,8 @@ const GeneralStateSection = () => {
         </div>
         <div className="flex flex-col items-start">
         <h2 className="text-center text-2xl text-base text-white">Total Revenue</h2>
-          <h3 className="text-center text-2xl font-semibold">
-            {earnings?.data?.meta?.total} $
+          <h3 className="text-center text-2xl font-semibold flex items-center gap-2">
+            {earnings?.data?.meta?.total} <MdOutlineEuroSymbol size={24} />
           </h3>
         </div>
       </div>

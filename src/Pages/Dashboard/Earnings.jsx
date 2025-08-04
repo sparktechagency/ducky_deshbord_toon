@@ -95,7 +95,9 @@ const Earnings = () => {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      render: (amount) => <span>${amount.toFixed(2 )}</span>,
+      render: (a) => (
+        <p className="text-green-500 font-semibold">€ {a.toFixed(2)}</p>
+      ),
     },
     {
       title: "Name",

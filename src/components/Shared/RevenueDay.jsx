@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { useRevenueDayWeekQuery } from "../../redux/apiSlices/earningSlice";
 import moment from "moment";
+import { MdOutlineEuroSymbol } from "react-icons/md";
 
 
 
@@ -70,7 +71,7 @@ useEffect(() => {
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Optional: Adds a subtle shadow
           }}
         >
-          <p><strong>Revenue: {totalIncome} $</strong></p>
+          <p className="flex items-center gap-2 font-semibold">Revenue: {totalIncome.toFixed(2)} <MdOutlineEuroSymbol /></p>
         </div>
       );
     }

@@ -88,6 +88,9 @@ const Shipment = () => {
       title: "Item Value",
       dataIndex: "value",
       key: "value",
+      render: (a) => (
+        <p className="text-green-500 font-semibold">€ {a.toFixed(2)}</p>
+      ),
     },
     {
       title: "W*H*L",

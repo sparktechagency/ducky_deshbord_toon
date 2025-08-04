@@ -10,6 +10,8 @@ import { MdLocalShipping } from "react-icons/md";
 import { useCreateShippingMutation } from "../../redux/apiSlices/shippingSlice";
 import RetryOrderModal from "../../components/ui/Orders/RetryOrder";
 import { RiLoopLeftFill } from "react-icons/ri";
+import { LuEuro } from "react-icons/lu";
+
 const options = [
   {
     value: 'received',
@@ -136,7 +138,7 @@ const RunningOrders = () => {
       dataIndex: "totalAmount",
       key: "totalAmount",
       render: (a) => (
-        <p className="text-green-500 font-semibold">$ {a.toFixed(2)}</p>
+        <p className="text-green-500 font-semibold">€ {a.toFixed(2)}</p>
       ),
     },
     {

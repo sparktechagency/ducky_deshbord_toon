@@ -8,6 +8,7 @@ import moment from "moment";
 import { useAllProductQuery, useDeleteProductMutation } from "../../redux/apiSlices/productSlice";
 import { all } from "axios";
 import EditProductModal from "../../components/ui/Products/EditProductModal";
+import { LuEuro } from "react-icons/lu";
 
 
 const Products = () => {
@@ -85,7 +86,7 @@ const Products = () => {
       dataIndex: "price",
       key: "price",
       render: (price) => (
-        <span className="text-gray-400">{price}$</span>
+        <span className="text-gray-400 flex items-center gap-1">{price}<LuEuro /></span>
       ),
     },
     {
